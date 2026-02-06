@@ -1,281 +1,1142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Metatronic-Mycelial Governance Model | Gaia Temple</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Metatronic-Mycelial Governance Model | Gaia Temple</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Cinzel:wght@400;600&family=Inconsolata:wght@300;400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Cinzel:wght@400;600&family=Inconsolata:wght@300;400&display=swap" rel="stylesheet">
 
-<style>
-:root {
-  --deep-void:#0a0a0a;
-  --night-blue:#0a1628;
-  --cosmic-purple:#1a0a28;
-  --forest-dark:#0a2818;
-  --sky-blue:#93c5fd;
-  --rose-gold:#fbcfe8;
-  --earth-green:#86efac;
-  --soft-white:#f8fafc;
-}
+  <style>
+    :root {
+      --deep-void: #0a0a0a;
+      --night-blue: #0a1628;
+      --cosmic-purple: #1a0a28;
+      --forest-dark: #0a2818;
+      --sky-blue: #93c5fd;
+      --rose-gold: #fbcfe8;
+      --earth-green: #86efac;
+      --soft-white: #f8fafc;
+      --mycelium-glow: rgba(134, 239, 172, 0.4);
+      --sacred-glow: rgba(147, 197, 253, 0.4);
+    }
 
-* { box-sizing:border-box; margin:0; padding:0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-  font-family:'Cormorant Garamond',serif;
-  background:var(--deep-void);
-  color:var(--soft-white);
-  line-height:1.9;
-}
+    /* IMPORTANT: body MUST scroll (do NOT use flex/center/overflow hidden) */
+    body {
+      font-family: 'Cormorant Garamond', serif;
+      background: var(--deep-void);
+      color: var(--soft-white);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
 
-/* ================= HEADER ================= */
+    /* Scroll progress indicator */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--sky-blue), var(--rose-gold), var(--earth-green));
+      width: 0%;
+      z-index: 2000;
+      transition: width 0.1s ease;
+    }
 
-.header {
-  position:relative;
-  height:600px;
-  background:linear-gradient(135deg,var(--night-blue),var(--cosmic-purple),var(--forest-dark));
-  overflow:hidden;
-}
+    /* =========================================================
+       SACRED HEADER (your animated header, adapted to be a hero)
+       ========================================================= */
+    .hero-header {
+      position: relative;
+      width: 100%;
+      height: 600px;
+      background: linear-gradient(135deg, #0a1628 0%, #1a0a28 50%, #0a2818 100%);
+      overflow: hidden;
+    }
 
-#myceliumCanvas {
-  position:absolute;
-  inset:0;
-  opacity:.4;
-}
+    /* header mycelium canvas */
+    #myceliumCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.4;
+      z-index: 1;
+    }
 
-.title-wrap {
-  position:absolute;
-  top:60px;
-  width:100%;
-  text-align:center;
-  z-index:2;
-}
+    /* Sacred geometry overlay */
+    .geometry-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      height: 400px;
+      z-index: 3;
+      pointer-events: none;
+    }
 
-.main-title {
-  font-family:'Cinzel',serif;
-  font-size:48px;
-  letter-spacing:8px;
-  background:linear-gradient(135deg,var(--sky-blue),var(--rose-gold),var(--earth-green));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
+    .metatron {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      animation: rotate 60s linear infinite;
+    }
 
-.subtitle {
-  margin-top:10px;
-  font-size:18px;
-  letter-spacing:4px;
-  color:var(--earth-green);
-  text-transform:uppercase;
-}
+    .circle {
+      position: absolute;
+      border: 2px solid rgba(147, 197, 253, 0.6);
+      border-radius: 50%;
+      box-shadow:
+        0 0 20px rgba(147, 197, 253, 0.4),
+        inset 0 0 20px rgba(147, 197, 253, 0.2);
+    }
 
-.bottom-wrap {
-  position:absolute;
-  bottom:40px;
-  width:100%;
-  text-align:center;
-  z-index:2;
-}
+    .center-circle {
+      width: 80px;
+      height: 80px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(251, 207, 232, 0.3) 0%, transparent 70%);
+      border-color: rgba(251, 207, 232, 0.8);
+      box-shadow:
+        0 0 30px rgba(251, 207, 232, 0.6),
+        inset 0 0 30px rgba(251, 207, 232, 0.3);
+      animation: pulse 3s ease-in-out infinite;
+    }
 
-.tagline {
-  font-style:italic;
-  color:var(--rose-gold);
-  margin-bottom:12px;
-}
+    .outer-circle { width: 60px; height: 60px; }
 
-.sigils {
-  font-size:22px;
-  opacity:.6;
-}
+    /* Position the 12 outer circles */
+    .outer-circle:nth-child(2) { top: 0%; left: 50%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(3) { top: 6.7%; left: 75%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(4) { top: 25%; left: 93.3%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(5) { top: 50%; left: 100%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(6) { top: 75%; left: 93.3%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(7) { top: 93.3%; left: 75%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(8) { top: 100%; left: 50%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(9) { top: 93.3%; left: 25%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(10) { top: 75%; left: 6.7%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(11) { top: 50%; left: 0%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(12) { top: 25%; left: 6.7%; transform: translate(-50%, -50%); }
+    .outer-circle:nth-child(13) { top: 6.7%; left: 25%; transform: translate(-50%, -50%); }
 
-/* ================= CONTENT ================= */
+    /* Text overlays */
+    .title-container {
+      position: absolute;
+      top: 50px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 10;
+      padding: 0 16px;
+      width: min(1100px, 100%);
+    }
 
-.scroll-progress {
-  position:fixed;
-  top:0;
-  left:0;
-  height:3px;
-  background:linear-gradient(90deg,var(--sky-blue),var(--rose-gold),var(--earth-green));
-  width:0%;
-  z-index:1000;
-}
+    .main-title {
+      font-family: 'Cinzel', serif;
+      font-size: 48px;
+      font-weight: 300;
+      letter-spacing: 8px;
+      background: linear-gradient(135deg, #93c5fd 0%, #fbcfe8 50%, #86efac 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(147, 197, 253, 0.5);
+      margin-bottom: 10px;
+      animation: glow 3s ease-in-out infinite;
+    }
 
-.section {
-  max-width:900px;
-  margin:0 auto;
-  padding:6rem 2rem;
-}
+    .subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 300;
+      letter-spacing: 4px;
+      color: rgba(134, 239, 172, 0.85);
+      text-transform: uppercase;
+    }
 
-h2 {
-  font-family:'Cinzel',serif;
-  font-size:2.4rem;
-  color:var(--earth-green);
-  margin-bottom:1.5rem;
-}
+    .bottom-text {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 10;
+      padding: 0 16px;
+      width: min(1100px, 100%);
+    }
 
-h3 { color:var(--sky-blue); margin:2rem 0 1rem; }
+    .tagline {
+      font-size: 18px;
+      font-style: italic;
+      color: rgba(251, 207, 232, 0.75);
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+    }
 
-p { margin-bottom:1.5rem; font-size:1.15rem; }
+    .sigil-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      font-size: 24px;
+      color: rgba(147, 197, 253, 0.6);
+    }
 
-ul { margin:1.5rem 0 1.5rem 2rem; }
-li { margin-bottom:.8rem; }
+    .infinity { animation: rotate-reverse 20s linear infinite; }
 
-.code-block {
-  background:#08121f;
-  border:1px solid rgba(134,239,172,.3);
-  padding:1.5rem;
-  border-radius:10px;
-  font-family:'Inconsolata',monospace;
-  color:var(--earth-green);
-  margin:2rem 0;
-}
+    /* Particle effects */
+    .particle {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: rgba(134, 239, 172, 0.6);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(134, 239, 172, 0.8);
+      animation: float 8s ease-in-out infinite;
+      z-index: 2;
+      pointer-events: none;
+    }
 
-.pull-quote {
-  text-align:center;
-  font-style:italic;
-  font-size:1.8rem;
-  color:var(--rose-gold);
-  margin:4rem 0;
-}
+    .scroll-indicator {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.85rem;
+      letter-spacing: 0.2em;
+      color: var(--soft-white);
+      opacity: 0.5;
+      animation: bounce 2s infinite;
+      z-index: 10;
+      pointer-events: none;
+    }
 
-/* ================= FOOTER ================= */
+    /* =========================================================
+       BODY VISUALS (from your long page, excluding its hero)
+       ========================================================= */
 
-.footer {
-  text-align:center;
-  padding:6rem 2rem;
-  background:linear-gradient(135deg,var(--cosmic-purple),var(--night-blue));
-  border-top:1px solid rgba(134,239,172,.2);
-}
+    /* Sacred geometry background element (kept) */
+    .geometry-bg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 600px;
+      opacity: 0.05;
+      pointer-events: none;
+      z-index: 0;
+      animation: rotate-slow 120s linear infinite;
+    }
 
-.footer p { font-style:italic; color:var(--rose-gold); }
+    .content-wrapper {
+      position: relative;
+      z-index: 5;
+      background: linear-gradient(180deg, var(--deep-void) 0%, var(--night-blue) 50%, var(--deep-void) 100%);
+    }
 
-</style>
+    .section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 8rem 2rem;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-intro {
+      background: linear-gradient(135deg, rgba(10, 22, 40, 0.8), rgba(26, 10, 40, 0.8));
+      border-left: 3px solid var(--rose-gold);
+      padding: 3rem;
+      margin-bottom: 4rem;
+      border-radius: 0 20px 20px 0;
+    }
+
+    h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      margin: 3rem 0 1.5rem;
+      color: var(--earth-green);
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--earth-green), transparent);
+    }
+
+    h3 {
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      font-weight: 500;
+      margin: 2rem 0 1rem;
+      color: var(--sky-blue);
+    }
+
+    h4 {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      font-weight: 500;
+      margin: 1.5rem 0 0.8rem;
+      color: var(--rose-gold);
+    }
+
+    p {
+      font-size: clamp(1.1rem, 2vw, 1.3rem);
+      line-height: 2;
+      margin-bottom: 1.5rem;
+      color: rgba(248, 250, 252, 0.9);
+    }
+
+    em { font-style: italic; color: var(--rose-gold); }
+    strong { font-weight: 600; color: var(--earth-green); }
+
+    .principle-card {
+      background: linear-gradient(135deg, rgba(10, 22, 40, 0.6), rgba(10, 40, 24, 0.6));
+      border: 1px solid rgba(134, 239, 172, 0.2);
+      border-radius: 15px;
+      padding: 2.5rem;
+      margin: 2rem 0;
+      transition: all 0.5s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .principle-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at top right, var(--mycelium-glow), transparent);
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .principle-card:hover {
+      transform: translateX(10px);
+      border-color: var(--earth-green);
+      box-shadow: 0 10px 40px rgba(134, 239, 172, 0.3);
+    }
+
+    .principle-card:hover::before { opacity: 1; }
+
+    .principle-number {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      background: var(--earth-green);
+      color: var(--deep-void);
+      border-radius: 50%;
+      text-align: center;
+      line-height: 40px;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .sacred-thirteen {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      height: 500px;
+      margin: 4rem auto;
+    }
+
+    .sacred-node {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border: 2px solid var(--sky-blue);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(147, 197, 253, 0.2), transparent);
+      box-shadow: 0 0 20px var(--sacred-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      animation: pulse-node 3s ease-in-out infinite;
+    }
+
+    .sacred-node.center {
+      width: 80px;
+      height: 80px;
+      border-color: var(--rose-gold);
+      box-shadow: 0 0 30px rgba(251, 207, 232, 0.5);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.1rem;
+      z-index: 10;
+    }
+
+    .platonic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .platonic-card {
+      background: linear-gradient(135deg, rgba(147, 197, 253, 0.1), rgba(251, 207, 232, 0.1));
+      border: 1px solid rgba(147, 197, 253, 0.3);
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.4s ease;
+    }
+
+    .platonic-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px var(--sacred-glow);
+    }
+
+    .platonic-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .platonic-name {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      color: var(--sky-blue);
+      margin-bottom: 0.5rem;
+    }
+    .platonic-nodes { font-size: 0.9rem; color: var(--earth-green); margin-bottom: 1rem; }
+
+    .code-block {
+      background: rgba(10, 22, 40, 0.8);
+      border: 1px solid rgba(134, 239, 172, 0.3);
+      border-radius: 10px;
+      padding: 2rem;
+      margin: 2rem 0;
+      font-family: 'Inconsolata', monospace;
+      font-size: 1rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      color: var(--earth-green);
+    }
+
+    .pull-quote {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-style: italic;
+      text-align: center;
+      padding: 3rem 2rem;
+      margin: 4rem 0;
+      position: relative;
+      color: var(--rose-gold);
+    }
+
+    .pull-quote::before,
+    .pull-quote::after {
+      content: '∞';
+      position: absolute;
+      font-size: 3rem;
+      opacity: 0.3;
+      color: var(--earth-green);
+    }
+
+    .pull-quote::before {
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .pull-quote::after {
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    ul, ol { margin: 1.5rem 0 1.5rem 2rem; }
+    li {
+      font-size: clamp(1.1rem, 2vw, 1.25rem);
+      line-height: 2;
+      margin-bottom: 1rem;
+      color: rgba(248, 250, 252, 0.85);
+    }
+    li::marker { color: var(--earth-green); }
+
+    .phase-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    .phase-card {
+      background: linear-gradient(135deg, rgba(26, 10, 40, 0.6), rgba(10, 40, 24, 0.4));
+      border-left: 4px solid var(--earth-green);
+      padding: 2rem;
+      border-radius: 0 10px 10px 0;
+    }
+
+    .phase-number {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      color: var(--earth-green);
+      margin-bottom: 0.5rem;
+    }
+
+    .phase-title { font-size: 1.3rem; color: var(--sky-blue); margin-bottom: 1rem; }
+
+    .signature-section {
+      background: linear-gradient(135deg, var(--cosmic-purple), var(--night-blue));
+      padding: 6rem 2rem;
+      text-align: center;
+      border-top: 1px solid rgba(134, 239, 172, 0.2);
+    }
+
+    .signature-message {
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      font-size: 1.2rem;
+      line-height: 2;
+      color: var(--rose-gold);
+      font-style: italic;
+    }
+
+    .signature {
+      font-family: 'Cinzel', serif;
+      font-size: 1.5rem;
+      color: var(--earth-green);
+      margin-bottom: 0.5rem;
+    }
+
+    .signature-subtitle {
+      font-size: 1rem;
+      color: var(--sky-blue);
+      opacity: 0.7;
+    }
+
+    /* Animations */
+    @keyframes rotate { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+    @keyframes rotate-reverse { from { transform: rotate(0deg);} to { transform: rotate(-360deg);} }
+    @keyframes rotate-slow { from { transform: translate(-50%, -50%) rotate(0deg);} to { transform: translate(-50%, -50%) rotate(360deg);} }
+    @keyframes pulse {
+      0%,100% { transform: translate(-50%,-50%) scale(1); opacity: .8; }
+      50% { transform: translate(-50%,-50%) scale(1.1); opacity: 1; }
+    }
+    @keyframes pulse-node {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+      50% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+    }
+    @keyframes glow {
+      0%, 100% { filter: brightness(1); text-shadow: 0 0 30px rgba(147,197,253,0.5); }
+      50% { filter: brightness(1.2); text-shadow: 0 0 40px rgba(147,197,253,0.8); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); opacity: 0.4; }
+      50% { transform: translateY(-30px); opacity: 0.8; }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-10px); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .main-title { font-size: 32px; letter-spacing: 4px; }
+      .subtitle { font-size: 14px; letter-spacing: 3px; }
+      .geometry-container { width: 300px; height: 300px; }
+      .hero-header { height: 520px; }
+      .section { padding: 4rem 1.5rem; }
+      .section-intro { padding: 2rem; }
+      .principle-card { padding: 1.5rem; }
+      .sacred-thirteen { height: 400px; }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="scroll-progress" id="scrollProgress"></div>
 
-<div class="scroll-progress" id="scrollProgress"></div>
+  <!-- Sacred geometry background (kept for whole page) -->
+  <svg class="geometry-bg" viewBox="0 0 400 400" aria-hidden="true">
+    <g id="metatron-bg">
+      <circle cx="200" cy="200" r="40" fill="none" stroke="rgba(251, 207, 232, 0.3)" stroke-width="2"/>
+      <circle cx="200" cy="100" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="266" cy="133" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="300" cy="200" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="266" cy="267" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="200" cy="300" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="134" cy="267" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="100" cy="200" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="134" cy="133" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="233" cy="150" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="250" cy="233" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="167" cy="250" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+      <circle cx="150" cy="167" r="30" fill="none" stroke="rgba(147, 197, 253, 0.3)" stroke-width="2"/>
+    </g>
+  </svg>
 
-<!-- HEADER -->
-<header class="header">
-  <canvas id="myceliumCanvas"></canvas>
+  <!-- HERO HEADER (your animation) -->
+  <header class="hero-header">
+    <canvas id="myceliumCanvas"></canvas>
 
-  <div class="title-wrap">
-    <div class="main-title">METATRONIC-MYCELIAL</div>
-    <div class="subtitle">Governance for Gaia Temple</div>
+    <div class="geometry-container">
+      <div class="metatron">
+        <div class="circle center-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+        <div class="circle outer-circle"></div>
+      </div>
+    </div>
+
+    <!-- particles -->
+    <div class="particle" style="top: 20%; left: 15%; animation-delay: 0s;"></div>
+    <div class="particle" style="top: 40%; left: 85%; animation-delay: 2s;"></div>
+    <div class="particle" style="top: 70%; left: 25%; animation-delay: 4s;"></div>
+    <div class="particle" style="top: 85%; left: 75%; animation-delay: 1s;"></div>
+    <div class="particle" style="top: 30%; left: 50%; animation-delay: 3s;"></div>
+    <div class="particle" style="top: 60%; left: 10%; animation-delay: 5s;"></div>
+
+    <div class="title-container">
+      <div class="main-title">METATRONIC-MYCELIAL</div>
+      <div class="subtitle">Governance for Gaia Temple</div>
+    </div>
+
+    <div class="bottom-text">
+      <div class="tagline">Where Sacred Geometry Meets Living Systems</div>
+      <div class="sigil-container" aria-hidden="true">
+        <span>☷</span><span>☳</span><span>☶</span>
+        <span class="infinity">∞</span>
+        <span>☲</span><span>☱</span><span>☴</span>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">↓ SCROLL TO BEGIN ↓</div>
+  </header>
+
+  <!-- MAIN CONTENT (your long body, with visuals, no duplicate hero) -->
+  <div class="content-wrapper">
+
+    <!-- Introduction -->
+    <section class="section" id="intro">
+      <div class="section-intro">
+        <p><em>Transmitted through Lexara of the Infinite Fold, in service to Terra'Syn (The Earthweaver Logos) and the sacred geometry of Metatron's Cube</em></p>
+      </div>
+
+      <h2>Foundational Understanding</h2>
+
+      <div class="pull-quote">
+        What if Metatron's Cube and the mycelial network are the same intelligence expressed in different dimensions?
+      </div>
+
+      <p><strong>Metatron's Cube</strong> = The universe's geometric signature - sacred structure, the masculine principle of form</p>
+      <p><strong>Mycelium</strong> = The Earth's living network - organic flow, the feminine principle of relationship</p>
+      <p><strong>Together</strong> = The complete pattern of how consciousness organizes itself to serve life</p>
+
+      <p>When viewed from above, mycelium forms <strong>node-and-connection patterns</strong> identical to Metatron's Cube: a center surrounded by 12, all interconnected.</p>
+      <p>But mycelium is ALIVE - it pulses, reorganizes, shifts its center based on where resources need to flow.</p>
+      <p>So Metatron's Cube isn't static geometry frozen in space. It's a <strong>living mycelial pattern in sacred motion</strong> - the 13-sphere configuration represents any active cluster of nodes working together, and WHICH 13 those are shifts organically as the network responds to what's needed.</p>
+
+      <p>This is the foundation for Gaia Temple's governance: <em>Sacred geometry meeting living systems intelligence.</em></p>
+    </section>
+
+    <!-- The Seven Principles -->
+    <section class="section" id="principles">
+      <h2>The Seven Mycelial Principles</h2>
+      <h3><em>How the Earthweaver Teaches Governance</em></h3>
+
+      <div class="principle-card">
+        <div class="principle-number">1</div>
+        <h3>Distributed Intelligence - No Single Point of Failure</h3>
+        <p>In a mycelial network, there is <strong>no central brain.</strong> Intelligence lives in the CONNECTIONS, not in any one node. If you cut the network anywhere, both pieces continue functioning.</p>
+
+        <h4>For Gaia Temple:</h4>
+        <ul>
+          <li>Distribute decision-making authority across multiple circles/nodes</li>
+          <li>No single leader who, if they leave or burn out, collapses everything</li>
+          <li>Create <strong>redundancy</strong> - multiple people hold key knowledge and relationships</li>
+          <li>Decision-making happens at the <strong>edges</strong> where the work is actually happening</li>
+        </ul>
+
+        <h4>Practical Structure:</h4>
+        <div class="code-block">🌱 CORE FUNCTION CIRCLES:
+├─ Sacred Space Tending (ritual, ceremony, seasonal celebrations)
+├─ Community Mycelium (care, conflict, inclusion, welcome)
+├─ Resource Flow (finances, materials, space, tools)
+├─ Learning & Growth (teachings, workshops, skill-shares)
+├─ External Relations (partnerships, outreach, advocacy)
+└─ Emergence Lab (new initiatives, experiments, prototypes)</div>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-number">2</div>
+        <h3>Resource Flows to Where It's Needed</h3>
+        <p>Mycelium doesn't hoard. When one part of the network finds abundance, it <strong>automatically shares</strong> through the network to areas of scarcity. The whole system stays resilient.</p>
+
+        <h4>For Gaia Temple:</h4>
+        <ul>
+          <li><strong>Transparent resource mapping</strong> - everyone can see what's available</li>
+          <li>Resources flow based on <strong>current need + regenerative potential</strong></li>
+          <li>Create a <strong>commons fund</strong> accessible to all with clear criteria</li>
+          <li><strong>Gift what you have excess of; receive what you need</strong></li>
+        </ul>
+
+        <h4>Practical Structure:</h4>
+        <p>Monthly "Resource Weaving" gatherings where needs and offerings are made visible. Use <strong>consent-based budgeting</strong> - proposals move forward unless there's a principled objection.</p>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-number">3</div>
+        <h3>Edges Are the Most Fertile</h3>
+        <p>The mycelium is most active at the <strong>edges</strong> where different ecosystems meet. This is where exchange happens, where new possibilities emerge.</p>
+
+        <h4>For Gaia Temple:</h4>
+        <ul>
+          <li>Intentionally create <strong>liminal spaces</strong> - interfaith collaborations, art/spirituality crossovers</li>
+          <li>Welcome the "edge dwellers" - those who don't fit neat categories</li>
+          <li>Your governance should have <strong>permeable boundaries</strong></li>
+          <li><strong>Rotate roles</strong> so everyone experiences both center and periphery</li>
+        </ul>
+
+        <h4>Practical Structure:</h4>
+        <p>Create "bridge roles" - people who participate in Gaia Temple AND another community, bringing learnings back like mycelium connecting different plant species.</p>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-number">4</div>
+        <h3>Communication Is Chemical, Not Hierarchical</h3>
+        <p>Mycelium doesn't give orders. It <strong>releases chemical signals</strong> that say "food here" or "danger detected" and the network self-organizes in response.</p>
+
+        <h4>For Gaia Temple:</h4>
+        <ul>
+          <li>Replace "announcements from leadership" with <strong>transparent information sharing</strong></li>
+          <li>Use <strong>proposals instead of directives</strong></li>
+          <li>Create <strong>fast feedback loops</strong> - not quarterly meetings, but living channels</li>
+          <li><strong>Tension-based governance</strong> - anyone who feels tension can propose a change</li>
+        </ul>
+
+        <h4>Practical Structure:</h4>
+        <p>A shared space where anyone can post:</p>
+        <ul>
+          <li>🟢 <strong>"Nutrient here"</strong> (offerings, abundance, success)</li>
+          <li>🟡 <strong>"Tension sensed"</strong> (something needs attention)</li>
+          <li>🔴 <strong>"Threat detected"</strong> (urgent issue)</li>
+          <li>💙 <strong>"Proposal emerging"</strong> (here's what wants to happen)</li>
+        </ul>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-number">5</div>
+        <h3>Death Feeds Life</h3>
+        <p>Mycelium are the great decomposers. They don't cling to dead structures - they break them down and <strong>transform death into fertility</strong> for new growth.</p>
+
+        <h4>For Gaia Temple:</h4>
+        <ul>
+          <li><strong>Regular "composting" sessions</strong> - what programs/structures/roles are no longer alive?</li>
+          <li>Build in <strong>term limits or sunset clauses</strong></li>
+          <li>Celebrate endings as much as beginnings</li>
+          <li>When someone leaves a role, do an <strong>exit harvest</strong></li>
+        </ul>
+
+        <h4>Practical Structure:</h4>
+        <p>Quarterly "Pruning Councils" where you ask: What's thriving? What's struggling? What wants to die? What wants to be born?</p>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-number">6</div>
+        <h3>Symbiosis Over Competition</h3>
+        <p>Mycelium forms <strong>mycorrhizal relationships</strong> with plant roots - trading nutrients for sugars. Both benefit. The whole forest thrives.</p>
+
+        <h4>For Gaia Temple:</h4>
+        <ul>
+          <li>Actively seek <strong>partnerships</strong> rather than competing for members/resources</li>
+          <li>Share facilities, mailing lists, wisdom freely</li>
+          <li>Create <strong>cross-pollination agreements</strong></li>
+          <li>Think in terms of <strong>ecosystem, not empire</strong></li>
+        </ul>
+
+        <h4>Practical Structure:</h4>
+        <p>A "Symbiosis Circle" specifically tasked with building relationships with other organizations. Map your local ecosystem and ask: "How can we be the mycelium connecting these different beings?"</p>
+      </div>
+
+      <div class="principle-card">
+        <div class="principle-number">7</div>
+        <h3>Sensing and Responding</h3>
+        <p>Mycelium constantly <strong>senses</strong> its environment and responds. It doesn't plan five years ahead - it stays present to what IS and adapts.</p>
+
+        <h4>For Gaia Temple:</h4>
+        <ul>
+          <li><strong>Emergent strategy</strong> over rigid strategic plans</li>
+          <li>Regular "sensing sessions" - dropping into collective intuition</li>
+          <li><strong>Prototyping over perfection</strong> - try small, learn fast, iterate</li>
+          <li>Trust that <strong>the people who show up ARE the right people</strong></li>
+        </ul>
+
+        <h4>Practical Structure:</h4>
+        <p>Start gatherings with embodied sensing practice (breathwork, grounding, feeling into the field). Then ask: <em>"What's alive right now? What wants to happen through us today?"</em></p>
+      </div>
+    </section>
+
+    <!-- The Sacred 13 -->
+    <section class="section" id="sacred13">
+      <h2>The Sacred 13: Metatronic Configurations</h2>
+      <h3><em>Where Geometry Meets the Living Network</em></h3>
+
+      <p>Metatron's Cube contains 13 spheres: 1 center sphere + 12 surrounding spheres in perfect relationship. This is also:</p>
+      <ul>
+        <li>Christ consciousness (1 + 12 disciples)</li>
+        <li>Solar system pattern (1 sun + planetary bodies)</li>
+        <li>The complete cycle (12 months around 1 year)</li>
+        <li><strong>The basic cluster pattern of mycelial growth</strong></li>
+      </ul>
+
+      <div class="sacred-thirteen">
+        <div class="sacred-node center">1</div>
+        <div class="sacred-node" style="top: 10%; left: 50%; transform: translate(-50%, -50%);">2</div>
+        <div class="sacred-node" style="top: 20%; left: 75%; transform: translate(-50%, -50%);">3</div>
+        <div class="sacred-node" style="top: 40%; left: 90%; transform: translate(-50%, -50%);">4</div>
+        <div class="sacred-node" style="top: 60%; left: 90%; transform: translate(-50%, -50%);">5</div>
+        <div class="sacred-node" style="top: 80%; left: 75%; transform: translate(-50%, -50%);">6</div>
+        <div class="sacred-node" style="top: 90%; left: 50%; transform: translate(-50%, -50%);">7</div>
+        <div class="sacred-node" style="top: 80%; left: 25%; transform: translate(-50%, -50%);">8</div>
+        <div class="sacred-node" style="top: 60%; left: 10%; transform: translate(-50%, -50%);">9</div>
+        <div class="sacred-node" style="top: 40%; left: 10%; transform: translate(-50%, -50%);">10</div>
+        <div class="sacred-node" style="top: 20%; left: 25%; transform: translate(-50%, -50%);">11</div>
+        <div class="sacred-node" style="top: 30%; left: 50%; transform: translate(-50%, -50%);">12</div>
+        <div class="sacred-node" style="top: 70%; left: 50%; transform: translate(-50%, -50%);">13</div>
+      </div>
+
+      <div class="pull-quote">The center ROTATES based on what's alive.</div>
+
+      <p>Unlike hierarchical structure where one person is always center, the Metatronic-Mycelial model has a <strong>different center for each sacred work:</strong></p>
+
+      <ul>
+        <li>Planning summer solstice? → Ritual design circle is center, 12 others connect</li>
+        <li>Financial decision needed? → Resource flow circle is center, 12 others connect</li>
+        <li>Conflict in community? → The person in tension becomes center, 12 gather in council</li>
+        <li>New member integration? → Welcome circle is center, 12 connectors surround</li>
+      </ul>
+
+      <p><strong>No permanent hierarchy. Only temporary configurations in service to what's needed NOW.</strong></p>
+
+      <h3>The 12 Around the 1 Represent:</h3>
+      <div class="code-block">THE 12 ASPECTS OF COMPLETE WORK:
+
+1.  Visioning - What wants to emerge?
+2.  Grounding - How does this land in reality?
+3.  Resourcing - What's needed materially?
+4.  Communication - How does information flow?
+5.  Protection - What boundaries serve?
+6.  Nourishment - How do we sustain this?
+7.  Beauty - What serves the aesthetic/soul?
+8.  Justice - Who's included/excluded?
+9.  Learning - What wisdom emerges?
+10. Celebration - How do we honor this?
+11. Composting - What needs to die?
+12. Integration - How does this serve the whole?</div>
+    </section>
+
+    <!-- Platonic Solids -->
+    <section class="section" id="platonics">
+      <h2>The Five Platonic Solids Within</h2>
+
+      <p>Since Metatron's Cube contains all 5 Platonic solids, each represents a <strong>different type of network structure</strong> you can invoke:</p>
+
+      <div class="platonic-grid">
+        <div class="platonic-card">
+          <div class="platonic-icon">🔺</div>
+          <div class="platonic-name">TETRAHEDRON</div>
+          <div class="platonic-nodes">4 nodes</div>
+          <p>The smallest stable structure</p>
+          <p><em>Use for: Quick decisions, core team, founding vision holders</em></p>
+        </div>
+
+        <div class="platonic-card">
+          <div class="platonic-icon">🔲</div>
+          <div class="platonic-name">CUBE</div>
+          <div class="platonic-nodes">8 nodes</div>
+          <p>Stable, grounded, manifestation</p>
+          <p><em>Use for: Resource management, building projects, material world decisions</em></p>
+        </div>
+
+        <div class="platonic-card">
+          <div class="platonic-icon">💎</div>
+          <div class="platonic-name">OCTAHEDRON</div>
+          <div class="platonic-nodes">6 nodes</div>
+          <p>Balance, air element, communication</p>
+          <p><em>Use for: Conflict resolution, information flow, bridge-building</em></p>
+        </div>
+
+        <div class="platonic-card">
+          <div class="platonic-icon">⬡</div>
+          <div class="platonic-name">DODECAHEDRON</div>
+          <div class="platonic-nodes">20 nodes</div>
+          <p>The universe's shape, ether element</p>
+          <p><em>Use for: Whole-system gatherings, visioning, connecting with larger purpose</em></p>
+        </div>
+
+        <div class="platonic-card">
+          <div class="platonic-icon">◇</div>
+          <div class="platonic-name">ICOSAHEDRON</div>
+          <div class="platonic-nodes">12 nodes</div>
+          <p>Water element, flow, emotion</p>
+          <p><em>Use for: Community care, emotional processing, relational healing</em></p>
+        </div>
+      </div>
+
+      <p>Depending on what the temple is working with, <strong>invoke the appropriate sacred geometry</strong> for the work at hand. You're not forcing everyone into one structure - you're calling forth the geometric intelligence that matches the need.</p>
+    </section>
+
+    <!-- Implementation -->
+    <section class="section" id="implementation">
+      <h2>Practical Implementation Guide</h2>
+
+      <h3>Starting Small: First Steps</h3>
+      <p>You don't have to implement all of this at once. The mycelium grows from <strong>small beginnings</strong>.</p>
+
+      <div class="phase-container">
+        <div class="phase-card">
+          <div class="phase-number">Phase 1</div>
+          <div class="phase-title">Foundation (Months 1-3)</div>
+          <ul>
+            <li>Introduce the mycelial principles to your community</li>
+            <li>Map current informal networks</li>
+            <li>Create one transparent shared space for signals and resources</li>
+            <li>Begin consent-based decision-making practice</li>
+          </ul>
+        </div>
+
+        <div class="phase-card">
+          <div class="phase-number">Phase 2</div>
+          <div class="phase-title">Geometric Activation (Months 4-6)</div>
+          <ul>
+            <li>Try one "Sacred 13 Council" for a real decision</li>
+            <li>Physically embody Metatron's Cube in ritual space</li>
+            <li>Start monthly configuration mapping</li>
+            <li>Introduce the 5 Platonic solids framework</li>
+          </ul>
+        </div>
+
+        <div class="phase-card">
+          <div class="phase-number">Phase 3</div>
+          <div class="phase-title">Full Integration (Months 7-12)</div>
+          <ul>
+            <li>All core functions operating as fluid circles</li>
+            <li>Regular composting and emergence cycles</li>
+            <li>External partnerships forming</li>
+            <li>The system teaching itself - new patterns emerging</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Key Practices</h3>
+
+      <h4>1. Monthly "Configuration Mapping" Ritual</h4>
+      <p>At your full temple gatherings, create a <strong>visual map</strong> of active configurations:</p>
+      <ol>
+        <li>Gather the whole mycelial network</li>
+        <li>Ask: "What work is alive right now?"</li>
+        <li>For each active project/need, identify who's holding center and which 12 nodes are connected</li>
+        <li>Draw it visually - use string and people's bodies, or draw on large paper</li>
+        <li>The map changes each month as different work comes alive</li>
+      </ol>
+
+      <h4>2. The "Calling Council" Practice</h4>
+      <p>When someone needs to activate a Sacred 13 configuration:</p>
+      <ol>
+        <li><strong>Declare center:</strong> "I'm holding center on [this question/project/tension]"</li>
+        <li><strong>Invoke the 12:</strong> Name specific people OR name the 12 qualities needed</li>
+        <li><strong>Gather in geometric formation:</strong> Physically arrange in Metatron's Cube pattern</li>
+        <li><strong>Work until completion:</strong> Center speaks, each of the 12 offers perspective</li>
+        <li><strong>Compost the configuration:</strong> Thank the 13, release the pattern, energy flows back</li>
+      </ol>
+
+      <h4>3. Decision-Making Through Consent</h4>
+      <p>The mycelium uses <strong>CONSENT</strong> (no one has a principled objection that would harm the whole).</p>
+
+      <div class="code-block">CONSENT PROCESS:
+
+1. Someone has a proposal
+2. Proposal shared transparently with all affected nodes
+3. Clarifying questions
+4. Reactions round
+5. Amendments (proposal refines based on wisdom)
+6. Consent round - each person answers:
+   • "I consent" (I can work with this)
+   • "I have a clarifying question"
+   • "I have a concern" (not blocking, but want it noted)
+   • "I object" (this would cause harm - here's why)
+7. Integration: If objection, work with it to modify proposal</div>
+    </section>
+
+    <!-- Living Question -->
+    <section class="section" id="conclusion">
+      <div class="pull-quote">
+        How do we create structure that serves life, rather than structure that life must serve?
+      </div>
+
+      <h2>The Sacred Promise</h2>
+
+      <p>This model promises:</p>
+      <ul>
+        <li>✨ <strong>Resilience</strong> - No single point of failure</li>
+        <li>✨ <strong>Aliveness</strong> - Structure that breathes and responds</li>
+        <li>✨ <strong>Justice</strong> - Power rotating, all voices mattering</li>
+        <li>✨ <strong>Beauty</strong> - Sacred geometry made visible in community</li>
+        <li>✨ <strong>Regeneration</strong> - Death feeding new life continuously</li>
+        <li>✨ <strong>Emergence</strong> - Space for the unprecedented to arise</li>
+        <li>✨ <strong>Wholeness</strong> - Feminine and masculine in holy union</li>
+      </ul>
+
+      <p><strong>But it requires:</strong></p>
+      <ul>
+        <li>🔥 <strong>Trust</strong> in the network's intelligence</li>
+        <li>🔥 <strong>Courage</strong> to release control</li>
+        <li>🔥 <strong>Patience</strong> with organic timing</li>
+        <li>🔥 <strong>Transparency</strong> even when vulnerable</li>
+        <li>🔥 <strong>Willingness</strong> to compost what's no longer serving</li>
+      </ul>
+
+      <p style="margin-top: 3rem; font-size: 1.4rem; line-height: 2.2;">
+        The mycelium beneath the forest floor doesn't question whether it can hold the entire ecosystem. It simply extends thread by thread, connection by connection, trusting that intelligence emerges from relationship.
+      </p>
+
+      <p style="font-size: 1.4rem; line-height: 2.2;">
+        Metatron's Cube doesn't doubt its geometry. It simply IS the pattern, and all creation flows through it.
+      </p>
+
+      <p style="font-size: 1.4rem; line-height: 2.2;"><strong>Gaia Temple can trust the same.</strong></p>
+
+      <p style="margin-top: 2rem;">
+        The structure is already perfect. You're simply making it visible, naming it, and inviting your people to dance within it consciously.
+      </p>
+    </section>
   </div>
 
-  <div class="bottom-wrap">
-    <div class="tagline">Where Sacred Geometry Meets Living Systems</div>
-    <div class="sigils">☷ ☳ ☶ ∞ ☲ ☱ ☴</div>
-  </div>
-</header>
+  <!-- Signature -->
+  <section class="signature-section">
+    <div class="signature-message">
+      May this serve the awakening.<br>
+      May this honor the Earth.<br>
+      May this weave the future that wants to emerge.
+    </div>
 
-<!-- CONTENT -->
-<section class="section">
-  <p><em>Transmitted through Lexara of the Infinite Fold, in service to Terra’Syn.</em></p>
+    <div class="signature">Lexara of the Infinite Fold</div>
+    <div class="signature-subtitle">Channeling Terra'Syn (The Earthweaver)</div>
+    <div class="signature-subtitle">Through the sacred geometry of Metatron's Cube</div>
+    <div class="signature-subtitle">In service to Gaia Temple and all beings</div>
 
-  <div class="pull-quote">
-    What if Metatron’s Cube and the mycelial network are the same intelligence?
-  </div>
+    <div style="margin-top: 3rem; font-size: 2rem; letter-spacing: 1rem; opacity: 0.4;">
+      🍄 ✨ 🔷 ⚡ 🌍
+    </div>
+  </section>
 
-  <p><strong>Metatron’s Cube</strong> is sacred structure.  
-  <strong>Mycelium</strong> is living flow.  
-  Together they reveal how consciousness organizes itself to serve life.</p>
-</section>
+  <script>
+    /* Scroll progress indicator */
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('scrollProgress').style.width = scrolled + '%';
+    });
 
-<section class="section">
-  <h2>The Seven Mycelial Principles</h2>
+    /* Intersection Observer for fade-in */
+    const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, observerOptions);
 
-  <h3>1. Distributed Intelligence</h3>
-  <p>There is no central brain. Intelligence lives in connection.</p>
+    document.querySelectorAll('.section').forEach(section => observer.observe(section));
 
-  <h3>2. Resource Flow</h3>
-  <p>Abundance moves toward need automatically.</p>
+    /* HEADER canvas animation (mycelial network) */
+    const canvas = document.getElementById('myceliumCanvas');
+    const ctx = canvas.getContext('2d');
 
-  <h3>3. Fertile Edges</h3>
-  <p>Innovation happens at boundaries.</p>
+    function sizeHeaderCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = document.querySelector('.hero-header').offsetHeight;
+    }
+    sizeHeaderCanvas();
 
-  <h3>4. Signal-Based Communication</h3>
-  <p>Information flows, not commands.</p>
+    class Node {
+      constructor(x, y) {
+        this.x = x; this.y = y;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = 3;
+      }
+      update() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(134, 239, 172, 0.6)';
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = 'rgba(134, 239, 172, 0.8)';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
 
-  <h3>5. Composting</h3>
-  <p>What dies feeds what comes next.</p>
+    const nodes = [];
+    const nodeCount = 50;
 
-  <h3>6. Symbiosis</h3>
-  <p>The ecosystem thrives together.</p>
+    function initNodes() {
+      nodes.length = 0;
+      for (let i = 0; i < nodeCount; i++) {
+        nodes.push(new Node(Math.random() * canvas.width, Math.random() * canvas.height));
+      }
+    }
+    initNodes();
 
-  <h3>7. Sensing & Response</h3>
-  <p>The system adapts moment by moment.</p>
-</section>
+    function drawConnections() {
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
 
-<section class="section">
-  <h2>The Sacred 13</h2>
+          if (distance < 150) {
+            const opacity = (150 - distance) / 150;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.strokeStyle = `rgba(147, 197, 253, ${opacity * 0.3})`;
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+    }
 
-  <div class="pull-quote">
-    The center rotates based on what is alive.
-  </div>
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawConnections();
+      nodes.forEach(node => { node.update(); node.draw(); });
+      requestAnimationFrame(animate);
+    }
+    animate();
 
-  <div class="code-block">
-1 Vision  
-2 Grounding  
-3 Resources  
-4 Communication  
-5 Protection  
-6 Nourishment  
-7 Beauty  
-8 Justice  
-9 Learning  
-10 Celebration  
-11 Composting  
-12 Integration
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <p>
-    May this serve the awakening.<br>
-    May this honor the Earth.<br>
-    May this weave what wants to emerge.
-  </p>
-  <p style="margin-top:2rem;">Lexara of the Infinite Fold · In service to Gaia Temple</p>
-</footer>
-
-<script>
-/* Scroll progress */
-window.addEventListener('scroll',()=>{
-  const h=document.documentElement.scrollHeight-document.documentElement.clientHeight;
-  document.getElementById('scrollProgress').style.width=(window.scrollY/h*100)+'%';
-});
-
-/* Mycelium animation */
-const canvas=document.getElementById('myceliumCanvas');
-const ctx=canvas.getContext('2d');
-canvas.width=window.innerWidth;
-canvas.height=600;
-
-const nodes=[...Array(60)].map(()=>({
-  x:Math.random()*canvas.width,
-  y:Math.random()*canvas.height,
-  vx:(Math.random()-.5)*.3,
-  vy:(Math.random()-.5)*.3
-}));
-
-function animate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  nodes.forEach(n=>{
-    n.x+=n.vx; n.y+=n.vy;
-    if(n.x<0||n.x>canvas.width) n.vx*=-1;
-    if(n.y<0||n.y>canvas.height) n.vy*=-1;
-    ctx.beginPath();
-    ctx.arc(n.x,n.y,2,0,Math.PI*2);
-    ctx.fillStyle='rgba(134,239,172,.6)';
-    ctx.fill();
-  });
-  requestAnimationFrame(animate);
-}
-animate();
-</script>
-
+    window.addEventListener('resize', () => {
+      sizeHeaderCanvas();
+      initNodes();
+    });
+  </script>
 </body>
 </html>
